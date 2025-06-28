@@ -1,0 +1,46 @@
+# Wiki files (manuel olarak GitHub Wiki'ye eklenecek)
+wiki/
+
+# Build outputs
+bin/
+obj/
+nupkg/
+*.nupkg
+
+# Visual Studio
+.vs/
+*.user
+*.suo
+*.userprefs
+*.sln.docstates
+
+# User-specific files
+*.rsuser
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Build results
+[Dd]ebug/
+[Dd]ebugPublic/
+[Rr]elease/
+[Rr]eleases/
+x64/
+x86/
+[Aa][Rr][Mm]/
+[Aa][Rr][Mm]64/
+bld/
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+
+# NuGet Packages
+*.nupkg
+*.snupkg
+packages/
+.nuget/
+
+# Others
+*.log
+*.tmp 

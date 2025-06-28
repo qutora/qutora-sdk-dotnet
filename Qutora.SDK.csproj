@@ -1,0 +1,75 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <LangVersion>latest</LangVersion>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    
+    <!-- Package Metadata -->
+    <PackageId>Qutora.SDK</PackageId>
+    <Title>Qutora Document Management SDK</Title>
+    <Description>Official .NET SDK for Qutora Document Management System. Provides easy integration with Qutora API for document upload, download, metadata management, and category operations. Designed for external application integration with built-in retry logic and comprehensive error handling.</Description>
+    <Summary>Official .NET SDK for Qutora Document Management System API integration</Summary>
+    <Authors>Qutora Team</Authors>
+    <Company>Qutora</Company>
+    <Product>Qutora SDK</Product>
+    <Copyright>Copyright © 2025 Qutora. All rights reserved.</Copyright>
+    <PackageTags>qutora;document-management;api;sdk;dotnet;documents;metadata;storage;integration</PackageTags>
+    <PackageProjectUrl>https://github.com/qutora/qutora-sdk-dotnet</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/qutora/qutora-sdk-dotnet.git</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <RepositoryBranch>main</RepositoryBranch>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageReleaseNotes>v1.0.1-preview: Fixed metadata schema deserialization, improved error handling for expected behaviors (404 responses), enhanced JSON parsing with $values format support. 100% test success rate (43/43 tests). Complete support for 22 API endpoints including document management, categories, metadata operations, and storage access.</PackageReleaseNotes>
+    <Version>1.0.1-preview</Version>
+    <AssemblyVersion>1.0.1.0</AssemblyVersion>
+    <FileVersion>1.0.1.0</FileVersion>
+    <PackageVersion>1.0.1-preview</PackageVersion>
+    
+    <!-- Quality and Documentation -->
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <DebugType>embedded</DebugType>
+    
+    <!-- Build Configuration -->
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <WarningsAsErrors />
+    <NoWarn>$(NoWarn);CS1591</NoWarn> <!-- Missing XML documentation -->
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)'=='Release'">
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <DefineConstants>RELEASE</DefineConstants>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Http" Version="8.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="8.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Options" Version="8.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="8.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Caching.Abstractions" Version="8.0.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.0" />
+    <PackageReference Include="System.Text.Json" Version="8.0.0" />
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="README.md" Pack="true" PackagePath="\" />
+    <None Include="LICENSE" Pack="true" PackagePath="\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
+      <_Parameter1>Qutora.SDK.Tests</_Parameter1>
+    </AssemblyAttribute>
+  </ItemGroup>
+
+</Project>

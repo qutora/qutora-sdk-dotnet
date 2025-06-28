@@ -1,0 +1,93 @@
+name: NuGet Package Publish
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+    types: [ closed ]
+
+jobs:
+  build-and-publish:
+    if: (github.event.pull_request.merged == true || github.ref == 'refs/heads/main') && contains(github.event.head_commit.message, '[release]')
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '8.0.x'
+    
+    - name: Get latest version from NuGet
+      id: get-version
+      run: |
+        LATEST_VERSION=$(curl -s "https://api.nuget.org/v3-flatcontainer/qutora.sdk/index.json" | jq -r '.versions[-1]')
+        echo "Current version: $LATEST_VERSION"
+        
+        # Extract version parts (remove -preview if exists)
+        BASE_VERSION=$(echo $LATEST_VERSION | sed 's/-preview//')
+        IFS='.' read -r major minor patch <<< "$BASE_VERSION"
+        
+        # Increment patch version
+        NEW_PATCH=$((patch + 1))
+        NEW_VERSION="$major.$minor.$NEW_PATCH"
+        
+        echo "New version: $NEW_VERSION"
+        echo "new-version=$NEW_VERSION" >> $GITHUB_OUTPUT
+    
+    - name: Update project version
+      run: |
+        NEW_VERSION="${{ steps.get-version.outputs.new-version }}"
+        sed -i "s/<Version>.*<\/Version>/<Version>$NEW_VERSION<\/Version>/" Qutora.SDK.csproj
+        sed -i "s/<AssemblyVersion>.*<\/AssemblyVersion>/<AssemblyVersion>$NEW_VERSION.0<\/AssemblyVersion>/" Qutora.SDK.csproj
+        sed -i "s/<FileVersion>.*<\/FileVersion>/<FileVersion>$NEW_VERSION.0<\/FileVersion>/" Qutora.SDK.csproj
+        sed -i "s/<PackageVersion>.*<\/PackageVersion>/<PackageVersion>$NEW_VERSION<\/PackageVersion>/" Qutora.SDK.csproj
+        echo "Updated version to $NEW_VERSION"
+    
+    - name: Restore dependencies
+      run: dotnet restore
+    
+    - name: Build
+      run: dotnet build --no-restore --configuration Release
+    
+    - name: Pack
+      run: dotnet pack --no-build --configuration Release --output ./nupkg
+    
+    - name: Publish to NuGet
+      env:
+        NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
+      if: env.NUGET_API_KEY != ''
+      run: dotnet nuget push ./nupkg/*.nupkg --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json --skip-duplicate
+      
+    - name: Warning - NuGet API Key Missing
+      env:
+        NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
+      if: env.NUGET_API_KEY == ''
+      run: echo "⚠️ NUGET_API_KEY secret not configured. Skipping NuGet publish."
+      
+    - name: Create GitHub Release
+      env:
+        NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      if: env.NUGET_API_KEY != ''
+      uses: actions/create-release@v1
+      with:
+        tag_name: v${{ steps.get-version.outputs.new-version }}
+        release_name: Release v${{ steps.get-version.outputs.new-version }}
+        body: |
+          Qutora .NET SDK Release v${{ steps.get-version.outputs.new-version }}
+          
+          ## Changes
+          - Automated release triggered by [release] tag
+          - See commit history for detailed changes
+        draft: false
+        prerelease: false
+
+  skip-notification:
+    if: (github.event.pull_request.merged == true || github.ref == 'refs/heads/main') && !contains(github.event.head_commit.message, '[release]')
+    runs-on: ubuntu-latest
+    steps:
+    - name: Skip Release Notification
+      run: echo "⏭️ Skipping release - no [release] tag found in commit message" 
