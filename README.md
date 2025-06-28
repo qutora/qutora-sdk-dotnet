@@ -4,7 +4,7 @@
 [![Downloads](https://img.shields.io/nuget/dt/Qutora.SDK.svg)](https://www.nuget.org/packages/Qutora.SDK/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![.NET](https://img.shields.io/badge/.NET-8.0+-blue.svg)](https://dotnet.microsoft.com/download)
-[![Build Status](https://img.shields.io/github/actions/workflow/status/qutora/qutora/build.yml)](https://github.com/qutora/qutora/actions)
+[![Build Status](https://img.shields.io/github/actions/workflow/status/qutora/qutora-sdk-dotnet/nuget-publish.yml)](https://github.com/qutora/qutora-sdk-dotnet/actions)
 
 **Official .NET SDK for Qutora Document Management System**
 
