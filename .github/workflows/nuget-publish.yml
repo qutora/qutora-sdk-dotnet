@@ -34,6 +34,12 @@ jobs:
         NEW_PATCH=$((patch + 1))
         NEW_VERSION="$major.$minor.$NEW_PATCH"
         
+        # Check if [preview] tag exists in commit message
+        if [[ "${{ github.event.head_commit.message }}" == *"[preview]"* ]]; then
+          NEW_VERSION="$NEW_VERSION-preview"
+          echo "Preview version detected"
+        fi
+        
         echo "New version: $NEW_VERSION"
         echo "new-version=$NEW_VERSION" >> $GITHUB_OUTPUT
     
